@@ -14,18 +14,53 @@ def E(x):
 
 # Distribuição de Boltzmann (não-normalizada)
 def P(x):
-    return np.exp((-k * x ** 2) / kb * T)
+    return np.exp((-beta * k *x ** 2) / 2)
 
 # Distribuição proposta (uniforme) no intervalo [-a, a]
 #a = 1
 #a = 3
+# def g(a, x):
+#     return 1 / (2 * a) if -a <= x <= a else 0
 def g(a, x):
-    return 1 / (2 * a) if -a <= x <= a else 0
+    return 1 / (2*a) if -a <= x <= a else 0
+
+def P_teorica(x):
+    const = ((beta * k) / (2 * np.pi))**0.5
+    return const * np.exp(-(beta * k * x**2)/2)
 
 # Rejection Sampling
 
 # Devemos gerar um número aleatório uniforme [0, 1], se  u <= P(x')/M*g(x'), devemos aceitar x'. Onde x' é obtido de forma uniforme no intervalo [-a, a] (x_prop)
-def rejection_sampling(n_samples, a):
+# def rejection_sampling(n_samples, a):
+#     """
+#     Função irá filtrar um número n_samples desejados, dentro do intervalo [-a, a], seguindo o critério proposto no rejection_samples, onde:
+#     x_proposto é aceito, se, um número u gerado de forma uniforme for tal que u <= P(x_proposto)/(M * g(x_proposto)), com M sendo uma constante
+#     de tal forma que Mg(x) > P(x), para que a função g(x) englobe a distribuição de interesse.
+    
+#     args:
+#         n_samples (int): número de amostras desejados
+#         a (int): intervalo simétrico de intereresse
+#     """
+    
+    
+#     samples = []
+    
+#     # Valor de M que faz com que Mg(x) >= P(x) para todos x no intervalo de interesse [-a, a]
+#     M = max([P(y) / g(a, y) for y in np.linspace(-a, a, 1000)])
+    
+#     while len(samples) < n_samples:
+#         # Amostra da proposta
+#         x_prop = random.uniform(-a, a)
+#         u = random.uniform(0, 1)
+        
+#         # Verificar aceitação
+#         if u <= P(x_prop) / (M * g(a, x_prop)):
+#             samples.append(x_prop)
+    
+#     return samples
+
+
+def rejection_sampling(n_samples, a, M):
     """
     Função irá filtrar um número n_samples desejados, dentro do intervalo [-a, a], seguindo o critério proposto no rejection_samples, onde:
     x_proposto é aceito, se, um número u gerado de forma uniforme for tal que u <= P(x_proposto)/(M * g(x_proposto)), com M sendo uma constante
@@ -40,7 +75,7 @@ def rejection_sampling(n_samples, a):
     samples = []
     
     # Valor de M que faz com que Mg(x) >= P(x) para todos x no intervalo de interesse [-a, a]
-    M = max([P(y) / g(a, y) for y in np.linspace(-a, a, 1000)])
+    #M = max([P(y) / g(a, y) for y in np.linspace(-a, a, 1000) if g(a, y) != 0])
     
     while len(samples) < n_samples:
         # Amostra da proposta
@@ -48,7 +83,7 @@ def rejection_sampling(n_samples, a):
         u = random.uniform(0, 1)
         
         # Verificar aceitação
-        if u <= P(x_prop) / (M * g(a, x_prop)):
+        if u <= P(x_prop) / (M * g(a, x_prop)) and g(a, x_prop) != 0:
             samples.append(x_prop)
     
     return samples
