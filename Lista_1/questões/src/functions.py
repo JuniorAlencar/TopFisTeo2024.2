@@ -128,3 +128,14 @@ def distribution_data(samples, a, b, m):
     filtered_Pk_data = [pk for pk in Pk_data if pk > 0]
 
     return filtered_k_data, filtered_Pk_data
+
+
+
+def direct_zeta(N, s):
+    S = 0  # Inicializa a soma
+    for i in range(1, N+1):
+        x_i = np.random.uniform(0, 1)  # Gera um número aleatório uniforme entre 0 e 1
+        x_i = -np.log(x_i) #importance sampling
+        S += (1/6)*(x_i ** (s-1))/(1-np.exp(-x_i))  # Atualiza a soma de zetta (soma acumulada)
+    
+    return S / N  # Retorna a média ponderada Σ/N
