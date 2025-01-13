@@ -22,8 +22,8 @@ def P(x):
     return np.exp((-beta * k *x ** 2) / 2)
 
 
-def g(a, x):
-    return 1 / (2*a) if -a <= x <= a else 0
+def g(a, b, x):
+    return 1 / (b - a) if a <= x <= b else 0
 
 def P_teorica(x):
     const = ((beta * k) / (2 * np.pi))**0.5
@@ -61,7 +61,7 @@ def P_teorica(x):
 #     return samples
 
 
-def rejection_sampling(n_samples, a, M, h, l):
+def rejection_sampling(n_samples, a, b, M, h, l):
     """
     Função irá filtrar um número n_samples desejados, dentro do intervalo [-a, a], seguindo o critério proposto no rejection_samples, onde:
     x_proposto é aceito, se, um número u gerado de forma uniforme for tal que u <= P(x_proposto)/(M * g(x_proposto)), com M sendo uma constante
@@ -82,17 +82,17 @@ def rejection_sampling(n_samples, a, M, h, l):
     
     while len(samples) < n_samples:
         # Amostra da proposta
-        x_prop = random.uniform(-a, a)
+        x_prop = random.uniform(b, a)
         u = random.uniform(0, 1)
         
         # Verificar aceitação
-        if u <= h(x_prop) / (M * l(a, x_prop)) and g(a, x_prop) != 0:
+        if u <= h(x_prop) / (M * l(a, b, x_prop)) and l(a, b, x_prop) != 0:
             samples.append(x_prop)
     
     return samples
 
 # Função para calcular a distribuição (Pk) e os valores de k
-def distribution_data(samples, a, m):
+def distribution_data(samples, a, b, m):
     # Construir os bins e calcular as distribuições
     """
     Calcula a distribuição normalizada a partir dos dados propostos
@@ -104,7 +104,7 @@ def distribution_data(samples, a, m):
     
     """
     #m = 100 # Número de pontos utilizados na discretização do eixo x
-    x = np.linspace(-a, a, m) 
+    x = np.linspace(a, b, m) 
     bins = [(float(x[i]), float(x[i+1])) for i in range(m-1)]
     count_values = [0 for i in range(m - 1)]
 
