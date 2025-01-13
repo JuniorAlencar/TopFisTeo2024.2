@@ -1,6 +1,11 @@
 
 import random
 import numpy as np
+import matplotlib as mpl
+mpl.rcParams['axes.linewidth'] = 1.4 #set the value globally
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import matplotlib.ticker as ticker
+import matplotlib.pyplot as plt
 
 # Considerando k = kb = T = 1
 k = 1.0  # Constante de força
@@ -16,11 +21,7 @@ def E(x):
 def P(x):
     return np.exp((-beta * k *x ** 2) / 2)
 
-# Distribuição proposta (uniforme) no intervalo [-a, a]
-#a = 1
-#a = 3
-# def g(a, x):
-#     return 1 / (2 * a) if -a <= x <= a else 0
+
 def g(a, x):
     return 1 / (2*a) if -a <= x <= a else 0
 
@@ -60,7 +61,7 @@ def P_teorica(x):
 #     return samples
 
 
-def rejection_sampling(n_samples, a, M):
+def rejection_sampling(n_samples, a, M, h, l):
     """
     Função irá filtrar um número n_samples desejados, dentro do intervalo [-a, a], seguindo o critério proposto no rejection_samples, onde:
     x_proposto é aceito, se, um número u gerado de forma uniforme for tal que u <= P(x_proposto)/(M * g(x_proposto)), com M sendo uma constante
@@ -69,6 +70,8 @@ def rejection_sampling(n_samples, a, M):
     args:
         n_samples (int): número de amostras desejados
         a (int): intervalo simétrico de intereresse
+        h (function): função de entrada dos quais queremos calcular (Boltzmann no nosso caso)
+        l (function): função que controla-la a rejeição
     """
     
     
@@ -83,7 +86,7 @@ def rejection_sampling(n_samples, a, M):
         u = random.uniform(0, 1)
         
         # Verificar aceitação
-        if u <= P(x_prop) / (M * g(a, x_prop)) and g(a, x_prop) != 0:
+        if u <= h(x_prop) / (M * l(a, x_prop)) and g(a, x_prop) != 0:
             samples.append(x_prop)
     
     return samples
