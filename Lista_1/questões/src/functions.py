@@ -129,8 +129,6 @@ def distribution_data(samples, a, b, m):
 
     return filtered_k_data, filtered_Pk_data
 
-
-
 def direct_zeta(N, s):
     S = 0  # Inicializa a soma
     for i in range(1, N+1):
