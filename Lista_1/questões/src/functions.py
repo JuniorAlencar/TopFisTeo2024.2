@@ -6,6 +6,7 @@ mpl.rcParams['axes.linewidth'] = 1.4 #set the value globally
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
+from scipy.integrate import trapezoid
 
 # Considerando k = kb = T = 1
 k = 1.0  # Constante de força
@@ -137,3 +138,30 @@ def direct_zeta(N, s):
         S += (1/6)*(x_i ** (s-1))/(1-np.exp(-x_i))  # Atualiza a soma de zetta (soma acumulada)
     
     return S / N  # Retorna a média ponderada Σ/N
+
+
+def metropolis(V, x0, beta, steps, delta):
+    """
+        V (function): Potencial que será utilizado
+        x0 (float): posição inicial
+        beta (float): parâmetro relacioando a temperatura 
+        steps (int): número de passos que será dado
+        delta (float): incremento para nova posição
+    """
+    
+    x = x0
+    positions = [x]
+    # Algoritmo irá correr até atingir o número de steps
+    for _ in range(steps):
+        # sorteando nova posição
+        x_new = x + np.random.uniform(-delta, delta)
+        delta_V = V(x_new) - V(x)
+        # Condicional de metropolis, se satisfeita, atualizar posição
+        if np.random.rand() < min(1, np.exp(-beta * delta_V)):
+            x = x_new
+        positions.append(x)
+    return np.array(positions)
+
+# Potencial utilizado
+def V(x):
+    return x**4 - 4*x**2
