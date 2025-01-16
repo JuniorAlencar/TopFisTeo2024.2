@@ -71,7 +71,6 @@ def rejection_sampling(n_samples, a, b, M, h, l):
     
     args:
         n_samples (int): número de amostras desejados
-        a (int): intervalo simétrico de intereresse
         h (function): função de entrada dos quais queremos calcular (Boltzmann no nosso caso)
         l (function): função que controla-la a rejeição
     """
