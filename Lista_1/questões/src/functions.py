@@ -7,6 +7,7 @@ from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
 from scipy.integrate import trapezoid
+from scipy.integrate import quad
 
 # Considerando k = kb = T = 1
 k = 1.0  # Constante de força
