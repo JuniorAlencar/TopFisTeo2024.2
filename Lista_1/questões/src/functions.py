@@ -165,3 +165,33 @@ def metropolis(V, x0, beta, steps, delta):
 # Potencial utilizado
 def V(x):
     return x**4 - 4*x**2
+
+
+def integral_I(N, d):
+    """
+    Aproximação de uma integral pelo método de Monte Carlo, calculando manualmente o módulo 
+    (norma euclidiana) e mantendo um laço explícito sobre N.
+
+    Args:
+        N (int): Número de amostras aleatórias.
+        d (int): Dimensão da integral.
+
+    Returns:
+        float: Valor aproximado da integral.
+    """
+    S = 0  # Inicializa a soma
+    
+    for i in range(N):  # Laço sobre as N amostras
+        # Gera um vetor aleatório de tamanho d, com valores uniformes entre 0 e 1
+        x_i = np.random.uniform(0, 1, d)
+        
+        # Calcula o módulo (norma euclidiana) do vetor x_i manualmente
+        # Fórmula: ||x|| = sqrt(x_1^2 + x_2^2 + ... + x_d^2)
+        modulus = np.sum(x_i**2)
+        
+        # Soma a função objetivo avaliada no módulo
+        S += np.exp(-modulus)
+
+    # Retorna a média acumulada da soma para aproximar o valor da integral
+    return S / N
+
