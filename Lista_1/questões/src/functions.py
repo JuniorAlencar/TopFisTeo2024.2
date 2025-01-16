@@ -14,7 +14,7 @@ k = 1.0  # Constante de força
 kb = 1.0  # Constante de Boltzmann
 T = 1.0  # Temperatura
 beta = 1 / (kb * T) 
-
+np.random.seed(42)
 # Energia de Boltzmann
 def E(x):
     return k * x ** 2 / 2
