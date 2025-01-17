@@ -24,6 +24,12 @@ def E(x):
 def P(x):
     return np.exp((-beta * k *x ** 2) / 2)
 
+#Função de Pcos(x) com x=cos(\theta)
+def Pcos(x):
+    return ((2/(3*np.pi))*(1+x**2))/np.sqrt(1-x**2)
+
+def Ptheta(x):
+    return ((2/(3*np.pi))*(1+(np.cos(x))**2))
 
 def g(a, b, x):
     return 1 / (b - a) if a <= x <= b else 0
