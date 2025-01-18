@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from scipy.integrate import trapezoid
 from scipy.integrate import quad
 import pandas as pd
+from scipy.stats import chisquare,kstest,probplot
+
 
 # Considerando k = kb = T = 1
 k = 1.0  # Constante de força
