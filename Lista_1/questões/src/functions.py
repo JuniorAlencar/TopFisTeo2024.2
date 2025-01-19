@@ -1,4 +1,3 @@
-
 import random
 import numpy as np
 import matplotlib as mpl
@@ -10,7 +9,7 @@ from scipy.integrate import trapezoid
 from scipy.integrate import quad
 import pandas as pd
 from scipy.stats import chisquare,kstest,probplot
-
+from scipy.integrate import quad
 
 # Considerando k = kb = T = 1
 k = 1.0  # Constante de força
@@ -100,6 +99,10 @@ def rejection_sampling(n_samples, a, b, M, h, l):
             samples.append(x_prop)
     
     return samples
+
+# Distribuição de Boltzmann (não normalizada)
+def P_eq(x, beta):
+    return np.exp(-beta * V(x))
 
 # Função para calcular a distribuição (Pk) e os valores de k
 def distribution_data(samples, a, b, m):
