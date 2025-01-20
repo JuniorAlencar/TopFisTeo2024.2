@@ -8,8 +8,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import trapezoid
 from scipy.integrate import quad
 import pandas as pd
-from scipy.stats import chisquare,kstest,probplot
-from scipy.integrate import quad
+from scipy.stats import ks_2samp, chisquare, kstest, probplot
 
 # Considerando k = kb = T = 1
 k = 1.0  # Constante de força
@@ -39,36 +38,30 @@ def P_teorica(x):
     const = ((beta * k) / (2 * np.pi))**0.5
     return const * np.exp(-(beta * k * x**2)/2)
 
-# Rejection Sampling
-
-# Devemos gerar um número aleatório uniforme [0, 1], se  u <= P(x')/M*g(x'), devemos aceitar x'. Onde x' é obtido de forma uniforme no intervalo [-a, a] (x_prop)
-# def rejection_sampling(n_samples, a):
-#     """
-#     Função irá filtrar um número n_samples desejados, dentro do intervalo [-a, a], seguindo o critério proposto no rejection_samples, onde:
-#     x_proposto é aceito, se, um número u gerado de forma uniforme for tal que u <= P(x_proposto)/(M * g(x_proposto)), com M sendo uma constante
-#     de tal forma que Mg(x) > P(x), para que a função g(x) englobe a distribuição de interesse.
+def calculate_cdf(k_data, pk_data):
+    """
+    Calcula a função de distribuição cumulativa (CDF) a partir de k_data e pk_data.
+    Normaliza pk_data automaticamente se a soma das probabilidades não for 1.
     
-#     args:
-#         n_samples (int): número de amostras desejados
-#         a (int): intervalo simétrico de intereresse
-#     """
-    
-    
-#     samples = []
-    
-#     # Valor de M que faz com que Mg(x) >= P(x) para todos x no intervalo de interesse [-a, a]
-#     M = max([P(y) / g(a, y) for y in np.linspace(-a, a, 1000)])
-    
-#     while len(samples) < n_samples:
-#         # Amostra da proposta
-#         x_prop = random.uniform(-a, a)
-#         u = random.uniform(0, 1)
+    Parameters:
+        k_data (list): Lista dos valores de x (k).
+        pk_data (list): Lista dos valores de P(X = k).
         
-#         # Verificar aceitação
-#         if u <= P(x_prop) / (M * g(a, x_prop)):
-#             samples.append(x_prop)
+    Returns:
+        list: Lista de valores da CDF F(x) correspondente a cada x em k_data.
+    """
+    if len(k_data) != len(pk_data):
+        raise ValueError("As listas k_data e pk_data devem ter o mesmo tamanho.")
     
-#     return samples
+    # Normalizar pk_data para garantir que a soma das probabilidades seja 1
+    total_prob = sum(pk_data)
+    if total_prob != 1.0:
+        pk_data = [p / total_prob for p in pk_data]
+    
+    # Calcular a CDF como soma acumulada de P(X = k)
+    cdf = np.cumsum(pk_data)
+    
+    return cdf.tolist()
 
 
 def rejection_sampling(n_samples, a, b, M, h, l):
